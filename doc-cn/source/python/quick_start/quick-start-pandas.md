@@ -129,7 +129,7 @@ dtype: object
 ![](../../../../img/quickstart/epsg-4326-to-3857-example.png)
 
 
-## 使用 Arctern 绘制图层
+## 使用 Arctern 绘制图层与地图
 
 导入绘图需要使用的模块：
 
@@ -138,7 +138,7 @@ dtype: object
 >>> from arctern.util.vega import vega_pointmap, vega_weighted_pointmap, vega_heatmap, vega_choroplethmap, vega_icon
 ```
 
-通过 Arctern 提供的绘图函数绘制点图图层：
+### 点图图层：
 
 ```python
 >>> # 绘制点大小为10，点颜色为#2DEF4A，点不透明度为1的点图图层。
@@ -151,7 +151,20 @@ dtype: object
 
 ![](../../../../img/quickstart/arctern_pointmap_pandas.png)
 
-通过 Arctern 提供的绘图函数绘制带权点图图层：
+直接在 matplotlib 中绘制
+
+```python
+>>> # 绘制点大小为10，点颜色为#2DEF4A，点不透明度为1的点图图层。
+>>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
+>>> plot_pointmap(ax, points_series, bbox, point_size=10)
+>>> plt.savefig('/tmp/arctern_plot_pointmap_pandas.png')
+```
+
+绘制结果如下：
+
+![](../../../../img/quickstart/arctern_plot_pointmap_pandas.png)
+
+### 绘制带权点图：
 
 ```python
 >>> # 绘制带权点图图层，点的颜色根据 fare_amount 在 "#115f9a" ~ "#d0f400" 之间变化，点的大小根据 total_amount 在 15 ~ 50 之间变化。
@@ -164,7 +177,19 @@ dtype: object
 
 ![](../../../../img/quickstart/arctern_weighted_pointmap_pandas.png)
 
-通过 Arctern 提供的绘图函数绘制热力图图层：
+直接在 matplotlib 中绘制
+
+```python
+>>> # 绘制带权点图，点的颜色根据 fare_amount 在 "#115f9a" ~ "#d0f400" 之间变化，点的大小根据 total_amount 在 15 ~ 50 之间变化。
+>>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
+>>> plot_weighted_pointmap(ax, points_series, df.fare_amount, df.total_amount, bbox, color_gradient=["#115f9a", "#d0f400"], color_bound=[1, 50], size_bound=[3, 15], opacity=1.0, coordinate_system="EPSG:4326")
+>>> plt.savefig("/tmp/arctern_plot_weighted_pointmap_pandas.png")
+```
+绘制结果如下：
+
+![](../../../../img/quickstart/arctern_plot_weighted_pointmap_pandas.png)
+
+## 绘制热力图图层：
 
 ```python
 >>> # 绘制热力图图层。
@@ -177,7 +202,20 @@ dtype: object
 
 ![](../../../../img/quickstart/arctern_heatmap_pandas.png)
 
-通过 Arctern 提供的绘图函数绘制轮廓图图层：
+直接在 matplotlib 中绘制
+
+```python
+>>> # 绘制热力图。
+>>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
+>>> plot_heatmap(ax, points_series, df.fare_amount, bbox, coordinate_system="EPSG:4326")
+>>> plt.savefig("/tmp/arctern_plot_heatmap_pandas.png")
+```
+
+绘制结果如下：
+
+![](../../../../img/quickstart/arctern_plot_heatmap_pandas.png)
+
+### 绘制轮廓图图层：
 
 ```python
 >>> # 绘制轮廓图图层，轮廓的填充颜色根据 fare_amount 在 "#115f9a" ~ "#d0f400" 之间变化。
@@ -190,10 +228,23 @@ dtype: object
 
 ![](../../../../img/quickstart/arctern_choroplethmap_pandas.png)
 
-通过 Arctern 提供的绘图函数绘制图标图图层：
+直接在 matplotlib 中绘制
 
 ```python
->>> # 绘制图标图图层。
+>>> # 绘制轮廓图图层，轮廓的填充颜色根据 fare_amount 在 "#115f9a" ~ "#d0f400" 之间变化。
+>>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
+>>> plot_choropleth_map(ax, buildings_series, df.fare_amount, bbox)
+>>> plt.savefig("/tmp/arctern_plot_choropleth_map_pandas.png")
+```
+
+绘制结果如下：
+
+![](../../../../img/quickstart/arctern_plot_choroplethmap_pandas.png)
+
+### 绘制图标图图层：
+
+```python
+# >>> # 绘制图标图图层。
 >>> vega = vega_icon(1024, 384, bounding_box=bbox, icon_path=ICON_PATH, coordinate_system="EPSG:4326")
 >>> png = icon_viz_layer(vega, points_series.head(20))
 >>> save_png(png, "/tmp/arctern_iconviz_pandas.png")
@@ -203,8 +254,20 @@ dtype: object
 
 ![](../../../../img/quickstart/arctern_iconviz_pandas.png)
 
+也可以直接在 matplotlib 中绘制
 
-通过 Arctern 提供的绘图函数绘制鱼网图图层：
+```python
+>>> # 绘制图标图图层。
+>>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
+>>> plot_iconviz(ax, points_series, ICON_PATH, bbox)
+>>> plt.savefig("/tmp/arctern_plot_iconviz_pandas.png")
+```
+
+绘制结果如下：
+
+![](../../../../img/quickstart/arctern_plot_iconviz_pandas.png)
+
+### 绘制鱼网图图层：
 
 ```python
 >>> # 绘制鱼网图图层。
