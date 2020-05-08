@@ -25,12 +25,12 @@
 
 该数据中时间格式为：`yyyy-MM-dd HH:mm::ss XXXXX`，如`2009-04-12 03:16:33 +00:00`。
 
-TODO 下载arctern_icon_small.png
+同时下载[arctern-icon-small.png](https://raw.githubusercontent.com/zilliztech/arctern-docs/master/img/icon/arctern-black.png)用于icon_viz绘制
 
 ## 设置数据路经
 ```python
 >>> CSV_PATH = "/path/to/0_5M_nyc_taxi_and_building.csv"
->>> ICON_PATH = "/path/to/arctern_icon_small.png"
+>>> ICON_PATH = "/path/to/arctern-icon-small.png"
 ```
 
 ## 加载数据
