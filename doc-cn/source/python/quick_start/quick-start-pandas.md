@@ -29,7 +29,7 @@
 
 ## 设置数据路经
 ```python
->>> CSV_PATH = "/path/to/0_5M_nyc_taxi_and_building.csv"
+>>> CSV_PATH = "/path/to/0_2M_nyc_taxi_and_building.csv"
 >>> ICON_PATH = "/path/to/arctern-icon-small.png"
 ```
 
