@@ -203,8 +203,6 @@ dtype: object
 
 ![](../../../../img/quickstart/arctern_iconviz_pandas.png)
 
-## 使用 Arctern 直接在 matplotlib 中绘制地图
-
 
 通过 Arctern 提供的绘图函数绘制鱼网图图层：
 
