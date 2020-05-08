@@ -234,7 +234,7 @@ dtype: object
 >>> # 绘制轮廓图图层，轮廓的填充颜色根据 fare_amount 在 "#115f9a" ~ "#d0f400" 之间变化。
 >>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
 >>> plot_choropleth_map(ax, buildings_series, df.fare_amount, bbox)
->>> plt.savefig("/tmp/arctern_plot_choropleth_map_pandas.png")
+>>> plt.savefig("/tmp/arctern_plot_choroplethmap_pandas.png")
 ```
 
 绘制结果如下：
