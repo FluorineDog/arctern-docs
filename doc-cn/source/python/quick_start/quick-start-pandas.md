@@ -25,6 +25,14 @@
 
 该数据中时间格式为：`yyyy-MM-dd HH:mm::ss XXXXX`，如`2009-04-12 03:16:33 +00:00`。
 
+TODO 下载arctern_icon_small.png
+
+## 设置数据路经
+```python
+>>> CSV_PATH = "/path/to/0_5M_nyc_taxi_and_building.csv"
+>>> ICON_PATH = "/path/to/arctern_icon_small.png"
+```
+
 ## 加载数据
 
 以下通过 Python 交互界面展示 Arctern 的使用方法。根据测试数据各字段的名称和数据类型，构建导入测试数据的 `schema`。
@@ -49,7 +57,7 @@
 ...     "buildingtext_pickup":"string",
 ...     "buildingtext_dropoff":"string",
 ... }
->>> df=pd.read_csv("/tmp/0_2M_nyc_taxi_and_building.csv",
+>>> df=pd.read_csv(CSV_PATH,
 ...                dtype=nyc_schame,
 ...                date_parser=pd.to_datetime,
 ...                parse_dates=["tpep_pickup_datetime","tpep_dropoff_datetime"])
@@ -69,19 +77,22 @@
 [5 rows x 16 columns]
 ```
 
-## 数据过滤
+## 数据过滤与预处理
 
-在指定地理区域（经度范围：-73.991504至-73.945155；纬度范围：40.770759至40.783434）中随机选取`200` 行数据。
+在指定地理区域（经度范围：-73.991504至-73.945155；纬度范围：40.770759至40.783434）中选取`200` 行数据, 并生成点与建筑物两种 `Geometry`对象
 
 ```python
->>> pos1=(-73.991504, 40.770759)
->>> pos2=(-73.945155, 40.783434)
+>>> bbox=[-73.991504, 40.770759, -73.945155, 40.783434] # [west, south]
 >>> limit_num=200
->>> 
->>> pickup_df = df[(df.pickup_longitude>pos1[0]) & (df.pickup_longitude<pos2[0]) & (df.pickup_latitude>pos1[1]) & (df.pickup_latitude<pos2[1])]
+>>> pickup_df = pickup_df[['pickup_longtitude', 'pickup_latitude', ]]
+>>> pickup_df.dropna()
+>>> pickup_df = df[(df.pickup_longitude>bbox[0]) & (df.pickup_longitude<bbox[2]) & (df.pickup_latitude>bbox[1]) & (df.pickup_latitude<bbox[3])]
 >>> pickup_df = pickup_df.head(limit_num)
+>>> points_series = ST_Point(pickup_df.pickup_longitude, pickup_df.pickup_latitude)
+>>> fare_amount_series = pickup_df.fare_amount
+>>> buildings_series = ST_GeomFromText(pickup_df.buildingtext_pickup)
 ```
-
+                                                                                                                                                       
 ## 使用 Arctern 提供的 GeoSpatial 函数处理数据
 
 导入 `arctern` 模块：
@@ -93,10 +104,10 @@
 根据经纬度数据创建坐标点数据：
 
 ```python
->>> ST_AsText(ST_Point(pickup_df.pickup_longitude, pickup_df.pickup_latitude)).head()
+>>> ST_AsText(points_series).head()
 0    POINT (-73.959908 40.776353)
 1    POINT (-73.955183 40.773459)
-2     POINT (-73.989523 40.77129)
+2    POINT (-73.989523 40.77129)
 3    POINT (-73.988154 40.774829)
 4    POINT (-73.982687 40.771625)
 dtype: object
@@ -105,12 +116,12 @@ dtype: object
 将坐标点数据使用的空间坐标系从`EPSG:4326`坐标系转换为到`EPSG:3857`坐标系，更多不同空间坐标系标准的详细信息请查看[维基百科相关页面](https://en.wikipedia.org/wiki/Spatial_reference_system)。
 
 ```python
->>> ST_AsText(ST_Transform(ST_Point(pickup_df.pickup_longitude, pickup_df.pickup_latitude),'epsg:4326', 'epsg:3857')).head()
+>>> ST_AsText(ST_Transform(points_series,'epsg:4326', 'epsg:3857')).head()
 0    POINT (-8233179.29767736 4979409.53917853)
 1    POINT (-8232653.31308336 4978984.12438949)
-2     POINT (-8236476.0243972 4978665.29594441)
-3      POINT (-8236323.6280143 4979185.5105596)
-4     POINT (-8235715.04435814 4978714.5380168)
+2    POINT (-8236476.0243972 4978665.29594441)
+3    POINT (-8236323.6280143 4979185.5105596)
+4    POINT (-8235715.04435814 4978714.5380168)
 dtype: object
 ```
 可以在[EPSG](http://epsg.io/transform#s_srs=4326&t_srs=3857)网站上验证转换是否正确
@@ -131,8 +142,8 @@ dtype: object
 
 ```python
 >>> # 绘制点大小为10，点颜色为#2DEF4A，点不透明度为1的点图图层。
->>> vega = vega_pointmap(1024, 384, bounding_box=[pos1[0], pos1[1], pos2[0], pos2[1]], point_size=10, point_color="#2DEF4A", opacity=1, coordinate_system="EPSG:4326")
->>> png = point_map_layer(vega, ST_Point(pickup_df.pickup_longitude, pickup_df.pickup_latitude))
+>>> vega = vega_pointmap(1024, 384, bounding_box=bbox, point_size=10, point_color="#2DEF4A", opacity=1, coordinate_system="EPSG:4326")
+>>> png = point_map_layer(vega, points_series)
 >>> save_png(png, '/tmp/arctern_pointmap_pandas.png')
 ```
 
@@ -144,8 +155,8 @@ dtype: object
 
 ```python
 >>> # 绘制带权点图图层，点的颜色根据 fare_amount 在 "#115f9a" ~ "#d0f400" 之间变化，点的大小根据 total_amount 在 15 ~ 50 之间变化。
->>> vega = vega_weighted_pointmap(1024, 384, bounding_box=[pos1[0], pos1[1], pos2[0], pos2[1]], color_gradient=["#115f9a", "#d0f400"], color_bound=[1, 50], size_bound=[3, 15], opacity=1.0, coordinate_system="EPSG:4326")
->>> png = weighted_point_map_layer(vega, ST_Point(pickup_df.pickup_longitude, pickup_df.pickup_latitude), color_weights=df.head(limit_num).fare_amount, size_weights=df.head(limit_num).total_amount)
+>>> vega = vega_weighted_pointmap(1024, 384, bounding_box=bbox, color_gradient=["#115f9a", "#d0f400"], color_bound=[1, 50], size_bound=[3, 15], opacity=1.0, coordinate_system="EPSG:4326")
+>>> png = weighted_point_map_layer(vega, points_series, color_weights=df.fare_amount, size_weights=df.total_amount)
 >>> save_png(png, "/tmp/arctern_weighted_pointmap_pandas.png")
 ```
 
@@ -157,8 +168,8 @@ dtype: object
 
 ```python
 >>> # 绘制热力图图层。
->>> vega = vega_heatmap(1024, 384, bounding_box=[pos1[0], pos1[1], pos2[0], pos2[1]], map_zoom_level=13.0, coordinate_system="EPSG:4326")
->>> png = heat_map_layer(vega, ST_Point(pickup_df.pickup_longitude, pickup_df.pickup_latitude), df.head(limit_num).fare_amount)
+>>> vega = vega_heatmap(1024, 384, bounding_box=bbox, map_zoom_level=13.0, coordinate_system="EPSG:4326")
+>>> png = heat_map_layer(vega, points_series, df.fare_amount)
 >>> save_png(png, "/tmp/arctern_heatmap_pandas.png")
 ```
 
@@ -170,8 +181,8 @@ dtype: object
 
 ```python
 >>> # 绘制轮廓图图层，轮廓的填充颜色根据 fare_amount 在 "#115f9a" ~ "#d0f400" 之间变化。
->>> vega = vega_choroplethmap(1024, 384, bounding_box=[pos1[0], pos1[1], pos2[0], pos2[1]], color_gradient=["#115f9a", "#d0f400"], color_bound=[2.5, 5], opacity=1.0, coordinate_system="EPSG:4326")
->>> png = choropleth_map_layer(vega, ST_GeomFromText(pickup_df.buildingtext_pickup), df.head(limit_num).fare_amount)
+>>> vega = vega_choroplethmap(1024, 384, bounding_box=bbox, color_gradient=["#115f9a", "#d0f400"], color_bound=[2.5, 5], opacity=1.0, coordinate_system="EPSG:4326")
+>>> png = choropleth_map_layer(vega, buildings_series, df.fare_amount)
 >>> save_png(png, "/tmp/arctern_choroplethmap_pandas.png")
 ```
 
@@ -183,8 +194,8 @@ dtype: object
 
 ```python
 >>> # 绘制图标图图层。
->>> vega = vega_icon(1024, 384, bounding_box=[pos1[0], pos1[1], pos2[0], pos2[1]], icon_path='/tmp/arctern-color.png', coordinate_system="EPSG:4326")
->>> png = icon_viz_layer(vega, ST_Point(pickup_df.head(25).pickup_longitude, pickup_df.head(25).pickup_latitude))
+>>> vega = vega_icon(1024, 384, bounding_box=bbox, icon_path=ICON_PATH, coordinate_system="EPSG:4326")
+>>> png = icon_viz_layer(vega, points_series.head(20))
 >>> save_png(png, "/tmp/arctern_iconviz_pandas.png")
 ```
 
@@ -192,12 +203,15 @@ dtype: object
 
 ![](../../../../img/quickstart/arctern_iconviz_pandas.png)
 
+## 使用 Arctern 直接在 matplotlib 中绘制地图
+
+
 通过 Arctern 提供的绘图函数绘制鱼网图图层：
 
 ```python
 >>> # 绘制鱼网图图层。
->>> vega = vega_fishnetmap(1024, 384, bounding_box=[pos1[0], pos1[1], pos2[0], pos2[1]], cell_size=8, cell_spacing=1, opacity=1.0, coordinate_system="EPSG:4326")
->>> png = fishnet_map_layer(vega, ST_Point(pickup_df.pickup_longitude, pickup_df.pickup_latitude), df.head(limit_num).fare_amount)
+>>> vega = vega_fishnetmap(1024, 384, bounding_box=bbox, cell_size=8, cell_spacing=1, opacity=1.0, coordinate_system="EPSG:4326")
+>>> png = fishnet_map_layer(vega, points_series, df.fare_amount)
 >>> save_png(png, "/tmp/arctern_fishnetmap_pandas.png")
 ```
 
