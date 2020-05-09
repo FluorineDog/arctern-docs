@@ -59,6 +59,23 @@ coordinate_system,aggregation_type)**
 
 &#x2002; &#x2003; &#x2002; &#x2003; base64编码的png图片。
 
+## 
+
+&#x2002; &#x2003; 直接在matplotlib中绘制点图。
+
+&#x2002; &#x2003; 参数
+
+&#x2002; &#x2003; &#x2002; &#x2003; * ax -- matplotlib.axes.Axes 对象
+
+&#x2002; &#x2003; &#x2002; &#x2003; * points(Series(dtype: object)) -- 所需绘制的点，格式为WKB。
+
+&#x2002; &#x2003; &#x2002; &#x2003; * bounding_box(list) -- 图片对应的地理坐标区域，以 [x_min, y_min, x_max, y_max] 的形式表示一个矩形区域。图片左下角的像素坐标 (0, 0) 对应地理坐标 (x_min, y_min) ，图片右上角的像素坐标 (width, height) 对应地理坐标 (x_max, y_max)。
+
+&#x2002; &#x2003; &#x2002; &#x2003; * coordinate_system(str) -- 可选参数，表示输入数据所属的地理坐标系统，默认值为"EPSG:4326"，当前支持的地理坐标系统请参照 <https://spatialreference.org/>。
+
+&#x2002; &#x2003; &#x2002; &#x2003; * extra_contextily_params(dict) -- 剩余参数, 传递给 contextily.add_basemap, 可用于[修改地图提供商](https://contextily.readthedocs.io/en/latest/providers_deepdive.html).
+
+
 
 ### 示例:
 

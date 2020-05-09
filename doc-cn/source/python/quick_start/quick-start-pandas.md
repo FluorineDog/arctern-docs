@@ -279,3 +279,9 @@ dtype: object
 鱼网图图层绘制结果如下：
 
 ![](../../../../img/quickstart/arctern_fishnetmap_pandas.png)
+
+## Matplotlib 使用其他地图提供商
+
+以 Mapbox 为例
+1. 参照 [Mapbox 文档](https://docs.mapbox.com/help/tutorials/get-started-tokens-api/)获取 Mapbox 的 token
+2. 
