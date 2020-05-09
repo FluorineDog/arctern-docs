@@ -154,7 +154,7 @@ dtype: object
 直接在 matplotlib 中绘制
 
 ```python
->>> # 绘制点大小为10，点颜色为#2DEF4A，点不透明度为1的点图图层。
+>>> # 绘制点大小为10的点图图层。
 >>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
 >>> plot_pointmap(ax, points_series, bbox, point_size=10)
 >>> plt.savefig('/tmp/arctern_plot_pointmap_pandas.png')
