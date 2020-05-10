@@ -281,7 +281,9 @@ dtype: object
 ## Matplotlib 使用其他地图提供商
 
 以 Mapbox 为例绘制 pointmap 为例
-参照 [Mapbox 文档](https://docs.mapbox.com/help/tutorials/get-started-tokens-api/)获取 Mapbox 的 token
+
+首先, 参照 [Mapbox 文档](https://docs.mapbox.com/help/tutorials/get-started-tokens-api/)获取 Mapbox 的 token
+
 ```python
 >>> accessToken="HERE IS YOUR TOKEN"
 >>> source=cx.providers.MapBox(accessToken=accessToken)
@@ -289,4 +291,5 @@ dtype: object
 >>> plot_pointmap(ax, points_series, bbox, point_size=10, source=source)
 >>> plt.savefig('/tmp/arctern_plot_pointmap_pandas.png')
 ```
+
 其他地图提供商可以参加 [contextily/_provider.py](https://github.com/geopandas/contextily/blob/e0bb25741f9448c5b6b0e54d403b0d03d9244abd/contextily/_providers.py) 文件
