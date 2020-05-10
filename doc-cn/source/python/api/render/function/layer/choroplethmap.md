@@ -63,7 +63,11 @@ color_bound,opacity,coordinate_system,aggregation_type)**
 
 &#x2002; &#x2003; &#x2002; &#x2003; base64编码的png图片。
 
-## 
+## plot_choropleth_map
+**plot_choropleth_map(ax, region_boundaries, weights, bounding_box,
+                      color_gradient=["#115f9a", "#d0f400"], color_bound=[2.5, 5], opacity=1.0,
+                      coordinate_system='EPSG:4326',
+                      \*\*extra_contextily_params)**
 
 &#x2002; &#x2003; 直接在matplotlib中绘制点图。
 
@@ -78,6 +82,8 @@ color_bound,opacity,coordinate_system,aggregation_type)**
 &#x2002; &#x2003; &#x2002; &#x2003; * coordinate_system(str) -- 可选参数，表示输入数据所属的地理坐标系统，默认值为"EPSG:4326"，当前支持的地理坐标系统请参照 <https://spatialreference.org/>。
 
 &#x2002; &#x2003; &#x2002; &#x2003; * extra_contextily_params(dict) -- 剩余参数, 传递给 contextily.add_basemap, 可用于[更换地图背景, 或修改地图提供商](https://contextily.readthedocs.io/en/latest/providers_deepdive.html).
+
+&#x2002; &#x2003; &#x2002; &#x2003; * aggregation_type(str) -- 可选参数，表示输入数据到轮廓权重的聚合方式，默认值为"sum"。
 
 
 
