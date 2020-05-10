@@ -65,7 +65,18 @@ color_bound,size_bound,opacity,coordinate_system)**
 
 &#x2002; &#x2003; &#x2002; &#x2003; base64编码的png图片。
 
-## 
+## plot_weighted_pointmap
+**plot_weighted_pointmap(ax, points, 
+                         color_weights=None,
+                         size_weights=None,
+                         bounding_box=None,
+                         coordinate_system='EPSG:4326',
+                         color_gradient=["#115f9a", "#d0f400"],
+                         color_bound=[0, 0],
+                         size_bound=[3],
+                         opacity=1.0,
+                         aggregation_type="max",
+                         \*\*extra_contextily_params) **
 
 &#x2002; &#x2003; 直接在matplotlib中绘制点图。
 
@@ -75,7 +86,25 @@ color_bound,size_bound,opacity,coordinate_system)**
 
 &#x2002; &#x2003; &#x2002; &#x2003; * points(Series(dtype: object)) -- 所需绘制的点，格式为WKB。
 
+&#x2002; &#x2003; &#x2002; &#x2003; * color_weights(Series(dtype: float64|int64)) -- 可选参数，点的颜色权重。
+
+&#x2002; &#x2003; &#x2002; &#x2003; * size_weights(Series(dtype: float64|int64)) -- 可选参数，点的大小权重。
+
 &#x2002; &#x2003; &#x2002; &#x2003; * bounding_box(list) -- 图片对应的地理坐标区域，以 [x_min, y_min, x_max, y_max] 的形式表示一个矩形区域。图片左下角的像素坐标 (0, 0) 对应地理坐标 (x_min, y_min) ，图片右上角的像素坐标 (width, height) 对应地理坐标 (x_max, y_max)。
+
+&#x2002; &#x2003; &#x2002; &#x2003; * width(int) -- 图片宽度，单位为像素个数。
+
+&#x2002; &#x2003; &#x2002; &#x2003; * height(int) -- 图片高度，单位为像素个数。
+
+&#x2002; &#x2003; &#x2002; &#x2003; * bounding_box(list) -- 图片对应的地理坐标区域，以 [x_min, y_min, x_max, y_max] 的形式表示一个矩形区域。图片左下角的像素坐标 (0, 0) 对应地理坐标 (x_min, y_min) ，图片右上角的像素坐标 (width, height) 对应地理坐标 (x_max, y_max)。
+
+&#x2002; &#x2003; &#x2002; &#x2003; * color_gradient(list) -- 点的颜色渐变范围，表示形式为 ["hex_color"] 或 ["hex_color1", "hex_color2"]。当形式为["hex_color"] 时所有点的颜色相同。当形式为["hex_color1", "hex_color2"] 时点的颜色由输入数据中一列的值（权重）决定，且颜色在 "hex_color1" ~ "hex_color2" 之间变化。
+
+&#x2002; &#x2003; &#x2002; &#x2003; * color_bound(list) -- 可选参数，用于描述权重与颜色的对应关系，仅当color_gradient中包含两个颜色值时需要设置，表示形式为 [color_min, color_max]。权重值小于等于 color_min 时点的颜色为"hex_color1"， 权重值大于等于 color_max 时点的颜色为"hex_color2"。
+
+&#x2002; &#x2003; &#x2002; &#x2003; * size_bound(list) -- 可选参数，用于描述点的直径范围，表示形式为 [diameter] 或 [diameter_min, diameter_max]，默认值为[3]。[diameter] 形式表示所有点的直径都为 diameter; [diameter_min, diameter_max] 形式表示点的直径由输入数据中一列的值（权重）决定，且在 diameter_min ~ diameter_max 之间变化; 权重值小于等于 diameter_min 时点的直径为 diameter_min，权重值大于等于 diameter_max 时点的直径为 diameter_max; 权重值在 diameter_min ~ diameter_max 之间时点的直径与权重值相等。
+
+&#x2002; &#x2003; &#x2002; &#x2003; * opacity(float) -- 可选参数，表示点的不透明度，范围为 0.0 ~ 1.0，默认值为 1.0。
 
 &#x2002; &#x2003; &#x2002; &#x2003; * coordinate_system(str) -- 可选参数，表示输入数据所属的地理坐标系统，默认值为"EPSG:4326"，当前支持的地理坐标系统请参照 <https://spatialreference.org/>。
 
