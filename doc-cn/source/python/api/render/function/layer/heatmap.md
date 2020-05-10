@@ -91,6 +91,7 @@ coordinate_system,aggregation_type)**
       >>> import pandas as pd
       >>> import numpy as np
       >>> import arctern
+      >>> import matplotlib.pyplot as plt
       >>> from arctern.util import save_png
       >>> from arctern.util.vega import vega_heatmap
       >>> 
@@ -110,6 +111,9 @@ coordinate_system,aggregation_type)**
       >>> vega = vega_heatmap(1824, 1777, bounding_box=[-74.01424568752932, 40.72759334104623, -73.96056823889673, 40.76721122683304], map_zoom_level=14.544283200495824, coordinate_system='EPSG:4326')
       >>> png = arctern.heat_map_layer(vega, points, input1['color_weights'])
       >>> save_png(png, "/tmp/python_heatmap.png") 
+      >>> # 直接在 matplot lib中绘制
+      >>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
+      >>> plot_heatmap(ax, point, input1['color_weights'], bounding_box=[-74.01424568752932, 40.72759334104623, -73.96056823889673, 40.76721122683304], coordinate_system='EPSG:4326'))
    ```
 
 渲染结果如下：

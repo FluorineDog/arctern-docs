@@ -263,7 +263,6 @@ dtype: object
 >>> plt.savefig("/tmp/arctern_plot_iconviz_pandas.png")
 ```
 
-绘制结果如下：
 
 ![](../../../../img/quickstart/arctern_plot_iconviz_pandas.png)
 
@@ -282,6 +281,9 @@ dtype: object
 
 ## Matplotlib 使用其他地图提供商
 
-以 Mapbox 为例
-1. 参照 [Mapbox 文档](https://docs.mapbox.com/help/tutorials/get-started-tokens-api/)获取 Mapbox 的 token
-2. 
+以 Mapbox 为例绘制 pointmap 为例
+参照 [Mapbox 文档](https://docs.mapbox.com/help/tutorials/get-started-tokens-api/)获取 Mapbox 的 token
+```python
+TOKEN="sk.HERE_IS_YOUR_TOKEN"
+
+```
