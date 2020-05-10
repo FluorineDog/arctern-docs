@@ -54,15 +54,21 @@
 
 &#x2002; &#x2003; &#x2002; &#x2003; base64编码的png图片。
 
-## 
+## plot_iconviz
 
-&#x2002; &#x2003; 直接在matplotlib中绘制点图。
+**plot_iconviz(ax, points, icon_path, bounding_box,
+                 coordinate_system='EPSG:4326',
+                 \*\*extra_contextily_params)**
+
+&#x2002; &#x2003; 根据给定的配置参数，绘制描述图标图渲染样式图
 
 &#x2002; &#x2003; 参数
 
 &#x2002; &#x2003; &#x2002; &#x2003; * ax(matplotlib.axes.Axes) -- 用来绘制几何体的坐标轴。
 
 &#x2002; &#x2003; &#x2002; &#x2003; * points(Series(dtype: object)) -- 所需绘制的点，格式为WKB。
+
+&#x2002; &#x2003; &#x2002; &#x2003; * icon_path(str) -- 图标png文件的绝对路径。
 
 &#x2002; &#x2003; &#x2002; &#x2003; * bounding_box(list) -- 图片对应的地理坐标区域，以 [x_min, y_min, x_max, y_max] 的形式表示一个矩形区域。图片左下角的像素坐标 (0, 0) 对应地理坐标 (x_min, y_min) ，图片右上角的像素坐标 (width, height) 对应地理坐标 (x_max, y_max)。
 
@@ -97,6 +103,11 @@
       >>> vega = vega_icon(1824, 1777, bounding_box=[-74.01424568752932, 40.72759334104623, -73.96056823889673, 40.76721122683304], icon_path='/path/to/icon.png', coordinate_system='EPSG:4326')
       >>> png = arctern.icon_viz_layer(vega, points)
       >>> save_png(png, "/tmp/python_icon_viz.png")
+      >>> 
+      >>> # matplotlib 版本
+      >>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
+      >>> plot_iconviz(ax, points, bounding_box=[-74.01424568752932, 40.72759334104623, -73.96056823889673, 40.76721122683304], icon_path='/path/to/icon.png', coordinate_system='EPSG:4326')
+      >>> plt.show()
    ```
 
 渲染结果如下：

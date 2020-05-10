@@ -154,7 +154,7 @@ color_bound,size_bound,opacity,coordinate_system)**
       >>> # 也可在 matplotlib 中直接绘制, 数据同上条
       >>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
       >>> plot_weighted_pointmap(ax, points2, color_weights=input2['color_weights'], size_weights=input2['size_weights'], bounding_box=[-73.99668712186558,40.72972339069935,-73.99045479584949,40.7345193345495], color_gradient=["#115f9a", "#d0f400"], color_bound=[2.5,15], size_bound=[15, 50], opacity=1.0, coordinate_system="EPSG:4326")
-      >>> plt.savefig('/tmp/python_plot_weighted_pointmap_1_1.png')
+      >>> plt.show()
    ```
 
 渲染结果如下：

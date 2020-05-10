@@ -114,6 +114,10 @@ color_bound,opacity,coordinate_system,aggregation_type)**
       >>> vega = vega_choroplethmap(1922, 1663, bounding_box=[-74.01124953254566,40.73413446570038,-73.96238859103838,40.766161712662296], color_gradient=["#115f9a","#d0f400"], color_bound=[5,18], opacity=1.0, coordinate_system='EPSG:4326', aggregation_type="mean")
       >>> png = arctern.choropleth_map_layer(vega, polygon, input1['color_weights'])
       >>> save_png(png, "/tmp/python_choroplethmap.png")
+      >>> # matplotlib 版本
+      >>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
+      >>> plot_choropleth_map(ax, polygon, input1['color_weights'], bounding_box=[-74.01124953254566,40.73413446570038,-73.96238859103838,40.766161712662296], color_gradient=["#115f9a","#d0f400"], color_bound=[5,18], opacity=1.0, coordinate_system='EPSG:4326', aggregation_type="mean")
+      >>> plt.show()
    ```
 
 渲染结果如下：

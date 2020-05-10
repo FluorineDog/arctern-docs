@@ -112,7 +112,7 @@ point_size=3, point_color='red', point_opacity=1.0, \*\*extra_contextily_params)
       >>> # 直接在 matplotlib 中绘制, 点颜色为红
       >>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
       >>> plot_pointmap(ax, points, [-74.01398981737215,40.71353244267465,-73.96979949831308,40.74480271529791], point_size=10, point_color='red')
-      >>> plt.savefig('/tmp/python_plot_pointmap.png')
+      >>> plt.show()
    ```
 
 渲染结果如下：

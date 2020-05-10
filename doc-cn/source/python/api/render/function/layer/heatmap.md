@@ -114,6 +114,8 @@ coordinate_system,aggregation_type)**
       >>> # 直接在 matplot lib中绘制
       >>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
       >>> plot_heatmap(ax, point, input1['color_weights'], bounding_box=[-74.01424568752932, 40.72759334104623, -73.96056823889673, 40.76721122683304], coordinate_system='EPSG:4326'))
+      >>> plt.show()
+ 
    ```
 
 渲染结果如下：
