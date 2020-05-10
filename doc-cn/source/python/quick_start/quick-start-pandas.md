@@ -25,7 +25,7 @@
 
 该数据中时间格式为：`yyyy-MM-dd HH:mm::ss XXXXX`，如`2009-04-12 03:16:33 +00:00`。
 
-同时下载[arctern-icon-small.png](https://raw.githubusercontent.com/zilliztech/arctern-docs/master/img/icon/arctern-black.png)用于icon_viz绘制
+同时下载[arctern-icon-small.png](https://raw.githubusercontent.com/zilliztech/arctern-docs/master/img/icon/arctern-icon-small.png)用于icon_viz绘制
 
 ## 设置数据路经
 ```python
@@ -263,19 +263,18 @@ dtype: object
 >>> plt.savefig("/tmp/arctern_plot_iconviz_pandas.png")
 ```
 
-
 ![](../../../../img/quickstart/arctern_plot_iconviz_pandas.png)
 
 ### 绘制鱼网图图层：
 
 ```python
->>> # 绘制鱼网图图层。
+>>> # 绘制渔网图图层。
 >>> vega = vega_fishnetmap(1024, 384, bounding_box=bbox, cell_size=8, cell_spacing=1, opacity=1.0, coordinate_system="EPSG:4326")
 >>> png = fishnet_map_layer(vega, points_series, df.fare_amount)
 >>> save_png(png, "/tmp/arctern_fishnetmap_pandas.png")
 ```
 
-鱼网图图层绘制结果如下：
+渔网图图层绘制结果如下：
 
 ![](../../../../img/quickstart/arctern_fishnetmap_pandas.png)
 

@@ -22,7 +22,7 @@ sudo apt install libgl-dev libosmesa6-dev libglu1-mesa-dev
 通过以下命令为 Arctern Restful Server 构建 Conda 环境。此处假设环境名称为 `arctern_server`，用户可根据需求自行选择合适的环境名称。
 
 ```shell
-conda create -n arctern_server python=3.7
+conda create -n arctern_server -c conda-forge python=3.7.6
 ```
 
 进入 `arctern_server` 虚拟环境：
@@ -37,7 +37,7 @@ conda activate arctern_server
 Arctern Restful Server 的运行依赖于 Arctern-Spark，使用以下命令在虚拟环境中安装 Arctern-Spark 包:
 
 ```shell
-conda install -y -q -c conda-forge -c arctern-dev arctern-spark
+conda install -y -q -c conda-forge -c arctern arctern-spark
 ```
 
 > 此处安装 Arctern-Spark 仅用于解决 Restful Server 的运行时依赖，不能作为执行 Restful 请求的 Arctern-Spark 后台。
