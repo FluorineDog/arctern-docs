@@ -17,6 +17,12 @@ Arctern 提供基于 Restful 接口的 Web 服务。通过配置可将 Restful S
 sudo apt install libgl-dev libosmesa6-dev libglu1-mesa-dev
 ```
 
+安装 Java，建议安装 open-jdk-8：
+
+```bash
+sudo apt-get install openjdk-8-jdk
+```
+
 ### 创建 Conda 虚拟环境
 
 通过以下命令为 Arctern Restful Server 构建 Conda 环境。此处假设环境名称为 `arctern_server`，用户可根据需求自行选择合适的环境名称。
@@ -62,15 +68,22 @@ python setup.py install
 
 ### 基于源码的安装
 
-从 [Arctern Github 仓库](https://github.com/zilliztech/arctern) 下载源码，在 `gui/server/arctern_server` 路径下运行以下命令构建 Arctern Restful Server 依赖环境：
+运行以下命令安装 Arctern Restful Server：
 
 ```bash
+# 下载源码
+git clone https://github.com/zilliztech/arctern.git
+# 切换分支
+cd arctern
+git checkout master
+# 安装依赖
+cd gui/server/arctern_server
 pip install -r requirements.txt
 ```
 
 ### 基于 PIP 的安装
 
-运行以下命令安装 Arctern Restful Server。
+运行以下命令安装 Arctern Restful Server：
 
 ```bash
 pip install arctern_server
@@ -163,9 +176,9 @@ arctern-server
 
 * -r：以 release 模式启动服务
 
-* -p：为服务指定 http 端口
+* -p：为服务指定 http 端口，默认为 `8080`
 
-* -i：为服务指定 IP 地址
+* -i：为服务指定 IP 地址，默认为本机IP `127.0.0.1`
 
 * --logfile= [path/to/logfile]： 配置日志文件路径信息，默认值为：` ./log.txt`
 

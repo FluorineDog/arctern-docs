@@ -84,7 +84,6 @@
 ```python
 >>> bbox=[-73.991504, 40.770759, -73.945155, 40.783434] # [west, south]
 >>> limit_num=200
->>> pickup_df = pickup_df[['pickup_longtitude', 'pickup_latitude', ]]
 >>> pickup_df.dropna()
 >>> pickup_df = df[(df.pickup_longitude>bbox[0]) & (df.pickup_longitude<bbox[2]) & (df.pickup_latitude>bbox[1]) & (df.pickup_latitude<bbox[3])]
 >>> pickup_df = pickup_df.head(limit_num)
@@ -135,7 +134,7 @@ dtype: object
 
 ```python
 >>> from arctern.util import save_png
->>> from arctern.util.vega import vega_pointmap, vega_weighted_pointmap, vega_heatmap, vega_choroplethmap, vega_icon
+>>> from arctern.util.vega import vega_pointmap, vega_weighted_pointmap, vega_heatmap, vega_choroplethmap, vega_icon, vega_fishnetmap
 ```
 
 ### 点图图层：
@@ -246,7 +245,7 @@ dtype: object
 ```python
 # >>> # 绘制图标图图层。
 >>> vega = vega_icon(1024, 384, bounding_box=bbox, icon_path=ICON_PATH, coordinate_system="EPSG:4326")
->>> png = icon_viz_layer(vega, points_series.head(20))
+>>> png = icon_viz_layer(vega, points_series.head(25))
 >>> save_png(png, "/tmp/arctern_iconviz_pandas.png")
 ```
 
@@ -265,7 +264,7 @@ dtype: object
 
 ![](../../../../img/quickstart/arctern_plot_iconviz_pandas.png)
 
-### 绘制鱼网图图层：
+### 绘制渔网图图层。
 
 ```python
 >>> # 绘制渔网图图层。
