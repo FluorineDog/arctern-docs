@@ -1,8 +1,8 @@
 # 删除scope
 
-删除指定的 `scope`，用户完成操作后需要使用该接口显式释放所占用的服务器资源。 
+删除指定的 `scope`，你完成操作后需要使用该接口显式释放所占用的服务器资源。 
 
-> <font color="#dd0000">注意：</font>`Arctern Restful` 服务不会主动释放用户申请的作用域，完成操作后请务必删除申请的所有作用域。
+> <font color="#dd0000">注意：</font>`Arctern Restful` 服务不会主动释放你申请的作用域，完成操作后请务必删除申请的所有作用域。
 
 ## 请求说明
 
@@ -15,11 +15,11 @@
 
 ## 样例
 
-### python
+### Python
 
-本文示例代码使用 python 的 `requests` 库调用 `Arctern Restful API`，使用下面的命令安装 `requests`：
+本文示例代码使用 Python 的 `requests` 库调用 `Arctern Restful API`，使用下面的命令安装 `requests`：
 
-```shell
+```bash
 pip install requests
 ```
 
@@ -41,7 +41,7 @@ print(response.text.encode('utf8'))
 
 ### curl
 
-```shell
+```bash
 curl --location --request DELETE 'http://localhost:8080/scope/scope_name'
 ```
 

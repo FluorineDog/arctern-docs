@@ -13,11 +13,11 @@
 
 ## 样例
 
-### python
+### Python
 
-本文示例代码使用 python 的 `requests` 库调用 `Arctern Restful API`，使用下面的命令安装 `requests`：
+本文示例代码使用 Python 的 `requests` 库调用 `Arctern Restful API`，使用下面的命令安装 `requests`：
 
-```shell
+```bash
 pip install requests
 ```
 
@@ -38,7 +38,7 @@ print(response.text.encode('utf8'))
 
 ### curl
 
-```shell
+```bash
 curl --location --request GET 'http://localhost:8080/table/schema?scope=scope1&session=spark&table=table1'
 ```
 

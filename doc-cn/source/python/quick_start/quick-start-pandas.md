@@ -1,29 +1,45 @@
-# Quick Start
+# 快速开始
 
-本文以纽约出租车数据集为例，展示如何使用 Arctern 完成数据的导入、运算和展示。
+本文以纽约出租车数据集为例，说明如何通过 Arctern 完成数据的导入、运算和展示。
+
+> **注意：** 本章所有示例代码均默认在 Python 3.7 环境中运行。若要在其他 Python 环境下运行，你可能需要适当修改代码内容。
 
 ## 数据准备
 
-在 Arctern 运行环境中下载[纽约出租车数据集](https://media.githubusercontent.com/media/zilliztech/arctern-resources/benchmarks/benchmarks/dataset/nyc_taxi/0_2M_nyc_taxi_and_building/0_2M_nyc_taxi_and_building.csv)，该数据集包含2009年纽约市出租车运营记录，各字段的含义如下：
+在后续示例中，你需要使用纽约出租车数据集。执行以下命令下载该数据集：
 
-- VendorID: string，运营商名称；
-- tpep_pickup_datetime: string，上车时间；
-- tpep_dropoff_datetime: string，下车时间；
-- passenger_count: long，乘客数量；
-- trip_distance: double，行程距离；
-- pickup_longitude: double，上车地点-经度；
-- pickup_latitude: double，上车地点-纬度；
-- dropoff_longitude: double，下车地点-经度；
-- dropoff_latitude: double，下车地点-纬度；
-- fare_amount: double，行程费用；
-- tip_amount: double，小费；
-- total_amount: double，总费用；
-- buildingid_pickup: long，上车地点所在建筑的id；
-- buildingid_dropoff: long，下车地点所在建筑的id；
-- buildingtext_pickup: string，上车地点所在建筑的轮廓描述；
-- buildingtext_dropoff: string，下车地点所在建筑的轮廓描述。
+```bash
+$ wget https://media.githubusercontent.com/media/zilliztech/arctern-resources/benchmarks/benchmarks/dataset/nyc_taxi/0_2M_nyc_taxi_and_building/0_2M_nyc_taxi_and_building.csv
+```
 
-该数据中时间格式为：`yyyy-MM-dd HH:mm::ss XXXXX`，如`2009-04-12 03:16:33 +00:00`。
+执行以下命令查看是否下载成功：
+
+```bash
+$ wc -l 0_2M_nyc_taxi_and_building.csv
+```
+
+该数据集包含 2009 年纽约市出租车的运营记录，各字段的含义如下：
+
+| 名称                  | 含义                       | 类型   |
+| :-------------------- | :------------------------- | :----- |
+| VendorID              | 运营商名称                 | string |
+| tpep_pickup_datetime  | 上车时间                   | string |
+| tpep_dropoff_datetime | 下车时间                   | string |
+| passenger_count       | 乘客数量                   | long   |
+| trip_distance         | 行程距离                   | double |
+| pickup_longitude      | 上车地点的经度              | double |
+| pickup_latitude       | 上车地点的纬度              | double |
+| dropoff_longitude     | 下车地点的经度              | double |
+| dropoff_latitude      | 下车地点的纬度              | double |
+| fare_amount           | 行程费用                   | double |
+| tip_amount            | 小费                       | double |
+| total_amount          | 总费用                     | double |
+| buildingid_pickup     | 上车地点所在建筑的 id      | long   |
+| buildingid_dropoff    | 下车地点所在建筑的 id      | long   |
+| buildingtext_pickup   | 上车地点所在建筑的轮廓描述 | string |
+| buildingtext_dropoff  | 下车地点所在建筑的轮廓描述 | string |
+
+> **注意：** 该数据集有 200000 行，其中时间格式为：`yyyy-MM-dd HH:mm::ss XXXXX`，如“2009-04-12 03:16:33 +00:00”。
 
 同时下载[arctern-icon-small.png](https://raw.githubusercontent.com/zilliztech/arctern-docs/master/img/icon/arctern-icon-small.png)用于icon_viz绘制
 
@@ -35,7 +51,9 @@
 
 ## 加载数据
 
-以下通过 Python 交互界面展示 Arctern 的使用方法。根据测试数据各字段的名称和数据类型，构建导入测试数据的 `schema`并导入数据。
+本文示例代码通过 Python 交互界面展示 Arctern 的使用方法。根据数据集中各字段的名称和数据类型，构建数据的 `schema` 并导入数据集。
+
+> **注意：** 你需要将示例中的 `</path/to/0_2M_nyc_taxi_and_building.csv>` 替换为本地数据集的绝对路径。
 
 ```python
 >>> import pandas as pd
@@ -63,7 +81,7 @@
 ...                parse_dates=["tpep_pickup_datetime","tpep_dropoff_datetime"])
 ```
 
-打印数据的前5行，验证数据是否加载成功：
+打印数据的前五行，验证数据是否加载成功：
 
 ```python
 >>> raw_df.head()
@@ -79,7 +97,7 @@
 
 ## 数据过滤
 
-在指定地理区域（经度范围：-73.991504至-73.945155；纬度范围：40.770759至40.783434）中选取`200` 行数据, 并生成点与建筑物两种 `Geometry`对象
+在指定地理区域（经度范围：-73.991504 至 -73.945155；纬度范围：40.770759 至 40.783434）中随机选取 200 行数据, 并生成点与建筑物两种 `Geometry`对象
 
 ```python
 >>> bbox=[-73.991504, 40.770759, -73.945155, 40.783434] # [west, south, east, north]
@@ -92,7 +110,7 @@
                                                                                                                                                        
 ## 使用 Arctern 提供的 GeoSpatial 函数处理数据
 
-导入 `arctern` 模块, 并预处理数据：
+1. 导入 `arctern` 模块, 并预处理数据：
 
 ```python
 >>> from arctern import *
@@ -101,7 +119,7 @@
 >>> buildings_series = ST_GeomFromText(df.buildingtext_pickup)
 ```
 
-根据经纬度数据创建坐标点数据：
+2. 根据经纬度数据创建坐标点数据：
 
 ```python
 >>> ST_AsText(points_series).head()
@@ -113,7 +131,7 @@
 dtype: object
 ```
 
-将坐标点数据使用的空间坐标系从`EPSG:4326`坐标系转换为到`EPSG:3857`坐标系，更多不同空间坐标系标准的详细信息请查看[维基百科相关页面](https://en.wikipedia.org/wiki/Spatial_reference_system)。
+将坐标点数据使用的空间坐标系从 `EPSG:4326` 坐标系转换到 `EPSG:3857` 坐标系。有关空间坐标系标准的详细信息请查看[维基百科相关页面](https://en.wikipedia.org/wiki/Spatial_reference_system)。
 
 ```python
 >>> ST_AsText(ST_Transform(points_series,'epsg:4326', 'epsg:3857')).head()
@@ -124,10 +142,10 @@ dtype: object
 4    POINT (-8235715.04435814 4978714.5380168)
 dtype: object
 ```
-可以在[EPSG](http://epsg.io/transform#s_srs=4326&t_srs=3857)网站上验证转换是否正确
+
+在 [EPSG](http://epsg.io/transform#s_srs=4326&t_srs=3857) 网站上验证转换结果是否正确。
 
 ![](../../../../img/quickstart/epsg-4326-to-3857-example.png)
-
 
 ## 使用 Arctern 绘制图层与地图
 
@@ -139,16 +157,18 @@ dtype: object
 >>> import matplotlib.pyplot as plt
 ```
 
-### 点图图层：
+### 点图
+
+执行以下代码绘制点图：
 
 ```python
->>> # 绘点大小为10，点颜色为#2DEF4A，点不透明度为1的点图图层。
+>>> # 点的大小为 10，颜色为 #2DEF4A，不透明度为 1
 >>> vega = vega_pointmap(1024, 384, bounding_box=bbox, point_size=10, point_color="#2DEF4A", opacity=1, coordinate_system="EPSG:4326")
 >>> png = point_map_layer(vega, points_series)
 >>> save_png(png, '/tmp/arctern_pointmap_pandas.png')
 ```
 
-点图图层绘制结果如下：
+点图的绘制结果如下：
 
 ![](../../../../img/quickstart/arctern_pointmap_pandas.png)
 
@@ -165,16 +185,18 @@ dtype: object
 
 ![](../../../../img/quickstart/arctern_plot_pointmap_pandas.png)
 
-### 绘制带权点图：
+### 带权点图
+
+执行以下代码绘制带权点图：
 
 ```python
->>> # 绘制带权点图图层，点的颜色根据 fare_amount 在 "#115f9a" ~ "#d0f400" 之间变化，点的大小根据 total_amount 在 15 ~ 50 之间变化。
+>>> # 点的颜色根据 fare_amount 在 #115f9a ～ #d0f400 之间变化，点的大小根据 total_amount 在 15 ～ 50 之间变化
 >>> vega = vega_weighted_pointmap(1024, 384, bounding_box=bbox, color_gradient=["#115f9a", "#d0f400"], color_bound=[1, 50], size_bound=[3, 15], opacity=1.0, coordinate_system="EPSG:4326")
 >>> png = weighted_point_map_layer(vega, points_series, color_weights=df.fare_amount, size_weights=df.total_amount)
 >>> save_png(png, "/tmp/arctern_weighted_pointmap_pandas.png")
 ```
 
-带权点图图层绘制结果如下：
+带权点图的绘制结果如下：
 
 ![](../../../../img/quickstart/arctern_weighted_pointmap_pandas.png)
 
@@ -190,7 +212,9 @@ dtype: object
 
 ![](../../../../img/quickstart/arctern_plot_weighted_pointmap_pandas.png)
 
-## 绘制热力图图层：
+### 热力图
+
+执行以下命令绘制热力图：
 
 ```python
 >>> # 绘制热力图图层。
@@ -199,7 +223,7 @@ dtype: object
 >>> save_png(png, "/tmp/arctern_heatmap_pandas.png")
 ```
 
-热力图图层绘制结果如下：
+热力图的绘制结果如下：
 
 ![](../../../../img/quickstart/arctern_heatmap_pandas.png)
 
@@ -216,7 +240,9 @@ dtype: object
 
 ![](../../../../img/quickstart/arctern_plot_heatmap_pandas.png)
 
-### 绘制轮廓图图层：
+### 轮廓图
+
+执行以下命令绘制轮廓图：
 
 ```python
 >>> # 绘制轮廓图图层，轮廓的填充颜色根据 fare_amount 在 "#115f9a" ~ "#d0f400" 之间变化。
@@ -225,7 +251,7 @@ dtype: object
 >>> save_png(png, "/tmp/arctern_choroplethmap_pandas.png")
 ```
 
-轮廓图图层绘制结果如下：
+轮廓图的绘制结果如下：
 
 ![](../../../../img/quickstart/arctern_choroplethmap_pandas.png)
 
@@ -242,7 +268,9 @@ dtype: object
 
 ![](../../../../img/quickstart/arctern_plot_choroplethmap_pandas.png)
 
-### 绘制图标图图层：
+### 图标图
+
+执行以下命令绘制图标图：
 
 ```python
 >>> # 绘制图标图图层。
@@ -251,14 +279,14 @@ dtype: object
 >>> save_png(png, "/tmp/arctern_iconviz_pandas.png")
 ```
 
-图标图图层绘制结果如下：
+图标图的绘制结果如下：
 
 ![](../../../../img/quickstart/arctern_iconviz_pandas.png)
 
 也可以直接在 matplotlib 中绘制
 
 ```python
->>> # 绘制图标图图层。
+>>> # 绘制图标图。
 >>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
 >>> plot_iconviz(ax, points_series, ICON_PATH, bbox, coordinate_system="EPSG:4326")
 >>> plt.savefig("/tmp/arctern_plot_iconviz_pandas.png")
@@ -266,7 +294,9 @@ dtype: object
 
 ![](../../../../img/quickstart/arctern_plot_iconviz_pandas.png)
 
-### 绘制渔网图图层。
+### 渔网图
+
+执行以下命令绘制渔网图：
 
 ```python
 >>> # 绘制渔网图图层。
@@ -275,14 +305,14 @@ dtype: object
 >>> save_png(png, "/tmp/arctern_fishnetmap_pandas.png")
 ```
 
-渔网图图层绘制结果如下：
+渔网图的绘制结果如下：
 
 ![](../../../../img/quickstart/arctern_fishnetmap_pandas.png)
 
 也可以直接在 matplotlib 中绘制
 
 ```python
->>> # 绘制渔网图图层。
+>>> # 绘制渔网图。
 >>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
 >>> plot_fishnetmap(ax, points_series, df.fare_amount, bbox, cell_size=8, cell_spacing=1, opacity=1.0, coordinate_system="EPSG:4326")
 >>> plt.savefig("/tmp/arctern_plot_fishnet_pandas.png")
