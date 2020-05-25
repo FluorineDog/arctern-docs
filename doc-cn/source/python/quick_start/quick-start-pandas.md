@@ -41,12 +41,15 @@ $ wc -l 0_2M_nyc_taxi_and_building.csv
 
 > **注意：** 该数据集有 200000 行，其中时间格式为：`yyyy-MM-dd HH:mm::ss XXXXX`，如“2009-04-12 03:16:33 +00:00”。
 
-同时下载[arctern-icon-small.png](https://raw.githubusercontent.com/zilliztech/arctern-docs/master/img/icon/arctern-icon-small.png)用于icon_viz绘制
+同时下载[arctern-icon-small.png](https://raw.githubusercontent.com/zilliztech/arctern-docs/master/img/icon/arctern-icon-small.png)用于iconviz绘制, 不需要可以忽略
 
 ## 设置数据路经
+
+> **注意：** 你需要将示例中的 `/path/to/XXX.png` 替换为本地图片的绝对路径。
+
 ```python
 >>> CSV_PATH = "/path/to/0_2M_nyc_taxi_and_building.csv"
->>> ICON_PATH = "/path/to/arctern-icon-small.png"
+>>> ICON_PATH = "/path/to/arctern-icon-small.png" # 仅针对 iconviz
 ```
 
 ## 加载数据
@@ -76,9 +79,9 @@ $ wc -l 0_2M_nyc_taxi_and_building.csv
 ...     "buildingtext_dropoff":"string",
 ... }
 >>> raw_df=pd.read_csv(CSV_PATH,
-...                dtype=nyc_schema,
-...                date_parser=pd.to_datetime,
-...                parse_dates=["tpep_pickup_datetime","tpep_dropoff_datetime"])
+...                    dtype=nyc_schema,
+...                    date_parser=pd.to_datetime,
+...                    parse_dates=["tpep_pickup_datetime","tpep_dropoff_datetime"])
 ```
 
 打印数据的前五行，验证数据是否加载成功：
@@ -175,7 +178,7 @@ dtype: object
 直接在 matplotlib 中绘制
 
 ```python
->>> # 绘制点大小为10，点颜色为#2DEF4A，点不透明度为1的点图。
+>>> # 点的大小为 10，颜色为 #2DEF4A，不透明度为 1
 >>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
 >>> plot_pointmap(ax, points_series, bbox, point_size=10, point_color="#2DEF4A", opacity=1, coordinate_system="EPSG:4326")
 >>> plt.savefig('/tmp/arctern_plot_pointmap_pandas.png')
@@ -203,7 +206,7 @@ dtype: object
 直接在 matplotlib 中绘制
 
 ```python
->>> # 绘制带权点图，点的颜色根据 fare_amount 在 "#115f9a" ~ "#d0f400" 之间变化，点的大小根据 total_amount 在 15 ~ 50 之间变化。
+>>> # 点的颜色根据 fare_amount 在 #115f9a ～ #d0f400 之间变化，点的大小根据 total_amount 在 15 ～ 50 之间变化
 >>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
 >>> plot_weighted_pointmap(ax, points_series, df.fare_amount, df.total_amount, bbox, color_gradient=["#115f9a", "#d0f400"], color_bound=[1, 50], size_bound=[3, 15], opacity=1.0, coordinate_system="EPSG:4326")
 >>> plt.savefig("/tmp/arctern_plot_weighted_pointmap_pandas.png")
@@ -245,7 +248,7 @@ dtype: object
 执行以下命令绘制轮廓图：
 
 ```python
->>> # 绘制轮廓图图层，轮廓的填充颜色根据 fare_amount 在 "#115f9a" ~ "#d0f400" 之间变化。
+>>> # 轮廓的填充颜色根据 fare_amount 在 #115f9a ~ #d0f400 之间变化
 >>> vega = vega_choroplethmap(1024, 384, bounding_box=bbox, color_gradient=["#115f9a", "#d0f400"], color_bound=[2.5, 5], opacity=1.0, coordinate_system="EPSG:4326")
 >>> png = choropleth_map_layer(vega, buildings_series, df.fare_amount)
 >>> save_png(png, "/tmp/arctern_choroplethmap_pandas.png")
@@ -258,9 +261,9 @@ dtype: object
 直接在 matplotlib 中绘制
 
 ```python
->>> # 绘制轮廓图图层，轮廓的填充颜色根据 fare_amount 在 "#115f9a" ~ "#d0f400" 之间变化。
+>>> # 轮廓的填充颜色根据 fare_amount 在 #115f9a ~ #d0f400 之间变化
 >>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
->>> plot_choroplethmap(ax, buildings_series, df.fare_amount, bbox, color_gradient=["#115f9a", "#d0f400"], color_bound=[2.5, 5], opacity=1.0)
+>>> plot_choroplethmap(ax, buildings_series, df.fare_amount, bbox, color_gradient=["#115f9a", "#d0f400"], color_bound=[2.5, 5], opacity=1.0, coordinate_system="EPSG:4326")
 >>> plt.savefig("/tmp/arctern_plot_choroplethmap_pandas.png")
 ```
 
@@ -273,7 +276,6 @@ dtype: object
 执行以下命令绘制图标图：
 
 ```python
->>> # 绘制图标图图层。
 >>> vega = vega_icon(1024, 384, bounding_box=bbox, icon_path=ICON_PATH, coordinate_system="EPSG:4326")
 >>> png = icon_viz_layer(vega, points_series)
 >>> save_png(png, "/tmp/arctern_iconviz_pandas.png")
@@ -299,7 +301,6 @@ dtype: object
 执行以下命令绘制渔网图：
 
 ```python
->>> # 绘制渔网图图层。
 >>> vega = vega_fishnetmap(1024, 384, bounding_box=bbox, cell_size=8, cell_spacing=1, opacity=1.0, coordinate_system="EPSG:4326")
 >>> png = fishnet_map_layer(vega, points_series, df.fare_amount)
 >>> save_png(png, "/tmp/arctern_fishnetmap_pandas.png")
@@ -312,7 +313,6 @@ dtype: object
 也可以直接在 matplotlib 中绘制
 
 ```python
->>> # 绘制渔网图。
 >>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
 >>> plot_fishnetmap(ax, points_series, df.fare_amount, bbox, cell_size=8, cell_spacing=1, opacity=1.0, coordinate_system="EPSG:4326")
 >>> plt.savefig("/tmp/arctern_plot_fishnet_pandas.png")
