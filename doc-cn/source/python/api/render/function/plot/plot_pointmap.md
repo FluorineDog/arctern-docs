@@ -1,15 +1,18 @@
 # point_map_layer
 
-绘制一个点图。需要先后调用 vega_pointmap 和 point_map_layer 两个接口。首先使用 vega_pointmap 构建描述点图渲染样式的 VegaPointMap 对象，然后使用 point_map_layer 渲染图像。
+绘制一个点图。
 
 ## vega_pointmap 
 
-**arctern.util.vega.vega_pointmap(width,height,bounding_box,point_size,point_color,
-opacity,coordinate_system)**
+**arctern.plot_pointmap(ax, points, bounding_box, coordinate_system='EPSG:4326',
+                  point_size=3, point_color='#0000FF', opacity=1.0,
+                  \*\*extra_contextily_params)**
 
-&#x2002; &#x2003; 根据给定的配置参数，构建描述点图渲染样式的 VegaPointMap 对象。
+&#x2002; &#x2003; 绘制点图。
 
 &#x2002; &#x2003; 参数
+
+&#x2002; &#x2003; &#x2002; &#x2003; * ax(matpolt)
 
 &#x2002; &#x2003; &#x2002; &#x2003; * width(int) -- 图片宽度，单位为像素个数。
 
@@ -41,7 +44,6 @@ opacity,coordinate_system)**
 
 **arctern.point_map_layer(vega, points)**
 
-&#x2002; &#x2003; 绘制点图。
 
 &#x2002; &#x2003; 参数
 
