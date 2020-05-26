@@ -1,22 +1,14 @@
-# point_map_layer
+# plot_pointmap
+**plot_pointmap(ax, points, bounding_box, coordinate_system='EPSG:4326', 
+point_size=3, point_color='red', point_opacity=1.0, \*\*extra_contextily_params)**
 
-绘制一个点图。
-
-## vega_pointmap 
-
-**arctern.plot_pointmap(ax, points, bounding_box, coordinate_system='EPSG:4326',
-                  point_size=3, point_color='#0000FF', opacity=1.0,
-                  \*\*extra_contextily_params)**
-
-&#x2002; &#x2003; 绘制点图。
+&#x2002; &#x2003; 直接在matplotlib中绘制点图。
 
 &#x2002; &#x2003; 参数
 
-&#x2002; &#x2003; &#x2002; &#x2003; * ax(matpolt)
+&#x2002; &#x2003; &#x2002; &#x2003; * ax(matplotlib.axes.Axes) -- 用来绘制几何体的坐标轴。
 
-&#x2002; &#x2003; &#x2002; &#x2003; * width(int) -- 图片宽度，单位为像素个数。
-
-&#x2002; &#x2003; &#x2002; &#x2003; * height(int) -- 图片高度，单位为像素个数。
+&#x2002; &#x2003; &#x2002; &#x2003; * points(Series(dtype: object)) -- 所需绘制的点，格式为 WKB。
 
 &#x2002; &#x2003; &#x2002; &#x2003; * bounding_box(list) -- 图片对应的地理坐标区域，以 [x_min, y_min, x_max, y_max] 的形式表示一个矩形区域。图片左下角的像素坐标 (0, 0) 对应地理坐标 (x_min, y_min) ，图片右上角的像素坐标 (width, height) 对应地理坐标 (x_max, y_max)。
 
@@ -28,39 +20,7 @@
 
 &#x2002; &#x2003; &#x2002; &#x2003; * coordinate_system(str) -- 可选参数，表示输入数据所属的地理坐标系统，默认值为"EPSG:3857"，当前支持的地理坐标系统请参照 <https://spatialreference.org/>。
 
-
-&#x2002; &#x2003; 返回值类型
-   
-&#x2002; &#x2003; &#x2002; &#x2003; arctern.util.vega.pointmap.vega_pointmap.VegaPointMap
-
-
-&#x2002; &#x2003; 返回
-
-&#x2002; &#x2003; &#x2002; &#x2003; 用于描述渲染样式的 VegaPointMap 对象。
-
-
-
-## point_map_layer 
-
-**arctern.point_map_layer(vega, points)**
-
-
-&#x2002; &#x2003; 参数
-
-&#x2002; &#x2003; &#x2002; &#x2003; * vega(VegaPointMap) -- VegaPointMap 对象。
-
-&#x2002; &#x2003; &#x2002; &#x2003; * points(Series(dtype: object)) -- 所需绘制的点，格式为 WKB。
-
-
-&#x2002; &#x2003; 返回值类型
-   
-&#x2002; &#x2003; &#x2002; &#x2003; bytes
-
-
-&#x2002; &#x2003; 返回
-
-&#x2002; &#x2003; &#x2002; &#x2003; base64 编码的 PNG 图片。
-
+&#x2002; &#x2003; &#x2002; &#x2003; * extra_contextily_params(dict) -- 剩余参数, 传递给 contextily.add_basemap, 可用于[更换地图背景, 或修改地图提供商](https://contextily.readthedocs.io/en/latest/providers_deepdive.html).
 
 ### 示例:
 
@@ -68,6 +28,7 @@
       >>> import pandas as pd
       >>> import numpy as np
       >>> import arctern
+      >>> import matplotlib as plt
       >>> from arctern.util import save_png
       >>> from arctern.util.vega import vega_pointmap
       >>> 
@@ -84,9 +45,9 @@
       >>> points = arctern.ST_Point(input1['longitude'], input1['latitude'])
       >>> 
       >>> # 绘制点大小为10，点颜色为#115f9a，点不透明度为0.5的点图
-      >>> vega = vega_pointmap(1903, 1777, bounding_box=[-74.01398981737215,40.71353244267465,-73.96979949831308,40.74480271529791], point_size=10, point_color="#115f9a", opacity=1.0, coordinate_system="EPSG:4326")
-      >>> png = arctern.point_map_layer(vega, points)
-      >>> save_png(png, "/tmp/python_pointmap.png")
+      >>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
+      >>> plot_pointmap(ax, points, [-74.01398981737215,40.71353244267465,-73.96979949831308,40.74480271529791], point_size=10, point_color='red')
+      >>> plt.savefig("/tmp/python_plot_pointmap.png")
    ```
 
 渲染结果如下：
