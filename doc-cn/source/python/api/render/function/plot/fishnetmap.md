@@ -1,19 +1,23 @@
 # fishnet_map_layer
 
-绘制一个渔网图。需要先后调用 vega_fishnetmap 和 fishnet_map_layer 两个接口。首先使用 vega_fishnetmap 构建描述渔网图渲染样式的 VegaFishNetMap 对象，然后使用 fishnet_map_layer 渲染图像。
+绘制一个渔网图。
 
 ## vega_fishnetmap 
-
-**arctern.util.vega.vega_fishnetmap(width,height,bounding_box,
-cell_size,cell_spacing,opacity,coordinate_system,aggregation_type)**
-
-&#x2002; &#x2003; 根据给定的配置参数，构建描述渔网图渲染样式的 VegaFishNetMap 对象。
+**plot_fishnetmap(ax, points, weights, bounding_box,
+                  color_gradient=["#0000FF", "#FF0000"],
+                  cell_size=4, cell_spacing=1, opacity=1.0,
+                  coordinate_system='epsg:3857',
+                  aggregation_type='sum',
+                  \*\*extra_contextily_params)**
+ 
 
 &#x2002; &#x2003; 参数
 
-&#x2002; &#x2003; &#x2002; &#x2003; * width(int) -- 图片宽度，单位为像素个数。
+&#x2002; &#x2003; &#x2002; &#x2003; * ax(matplotlib.axes.Axes) -- 用来绘制几何体的坐标轴。
 
-&#x2002; &#x2003; &#x2002; &#x2003; * height(int) -- 图片高度，单位为像素个数。
+&#x2002; &#x2003; &#x2002; &#x2003; * points(Series(dtype: object)) -- 数据点的位置，格式为 WKB。
+
+&#x2002; &#x2003; &#x2002; &#x2003; * weights(Series(dtype: float64|int64)) -- 数据点的颜色权重。
 
 &#x2002; &#x2003; &#x2002; &#x2003; * bounding_box(list) -- 图片对应的地理坐标区域，以 [x_min, y_min, x_max, y_max] 的形式表示一个矩形区域。图片左下角的像素坐标 (0, 0) 对应地理坐标 (x_min, y_min) ，图片右上角的像素坐标 (width, height) 对应地理坐标 (x_max, y_max)。
 
@@ -29,49 +33,14 @@ cell_size,cell_spacing,opacity,coordinate_system,aggregation_type)**
 
 &#x2002; &#x2003; &#x2002; &#x2003; * aggregation_type(str) -- 可选参数，表示输入数据到渔网网格权重的聚合方式，默认值为"sum"。
 
-
-&#x2002; &#x2003; 返回值类型
-
-&#x2002; &#x2003; &#x2002; &#x2003; arctern.util.vega.fishnetmap.vega_fishnetmap.VegaFishNetMap
-
-
-&#x2002; &#x2003; 返回
-
-&#x2002; &#x2003; &#x2002; &#x2003; 用于描述渲染样式的 VegaFishNetMap 对象。
-
-
-
-## fishnet_map_layer 
-
-**arctern.fishnet_map_layer(vega, points, weights)**
-
-&#x2002; &#x2003; 绘制渔网图，权重用于决定渔网网格的颜色。
-
-&#x2002; &#x2003; 参数
-
-&#x2002; &#x2003; &#x2002; &#x2003; * vega(VegaFishNetMap) -- VegaFishNetMap 对象。
-
-&#x2002; &#x2003; &#x2002; &#x2003; * points(Series(dtype: object)) -- 数据点的位置，格式为 WKB。
-
-&#x2002; &#x2003; &#x2002; &#x2003; * weights(Series(dtype: float64|int64)) -- 数据点的颜色权重。
-
-
-&#x2002; &#x2003; 返回值类型
-   
-&#x2002; &#x2003; &#x2002; &#x2003; bytes
-
-
-&#x2002; &#x2003; 返回
-
-&#x2002; &#x2003; &#x2002; &#x2003; base64 编码的 PNG 图片。
-
-
 ### 示例:
 
   ```python
       >>> import pandas as pd
       >>> import numpy as np
       >>> import arctern
+      >>> import matplotlib.pyplot import plt
+      >>> from arctern import plot_fishnetmap
       >>> from arctern.util import save_png
       >>> from arctern.util.vega import vega_fishnetmap
       >>> 
@@ -88,11 +57,7 @@ cell_size,cell_spacing,opacity,coordinate_system,aggregation_type)**
       >>> points = arctern.ST_Point(input1['longitude'], input1['latitude'])
       >>> 
       >>> # 根据 input1['color_weights'] 绘制渔网图
-      >>> vega = vega_fishnetmap(1824, 1777, bounding_box=[-74.01424568752932, 40.72759334104623, -73.96056823889673, 40.76721122683304], cell_size=8, cell_spacing=2, opacity=1.0, coordinate_system="EPSG:4326")
-      >>> png = arctern.fishnet_map_layer(vega, points, input1['color_weights'])
-      >>> save_png(png, "/tmp/python_fishnet_map.png")
+      >>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
+      >>> plot_fishnetmap(points, input1['color_weights'], bounding_box=[-74.01424568752932, 40.72759334104623, -73.96056823889673, 40.76721122683304], cell_size=8, cell_spacing=2, opacity=1.0, coordinate_system="EPSG:4326")
+      >>> plt.show()
    ```
-
-渲染结果如下：
-
-![](../../../../../../../img/render/python/python_fishnet_map.png)
