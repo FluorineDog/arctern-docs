@@ -1,6 +1,8 @@
 # plot_pointmap
-**plot_pointmap(ax, points, bounding_box, coordinate_system='EPSG:4326', 
-point_size=3, point_color='red', point_opacity=1.0, \*\*extra_contextily_params)**
+**plot_pointmap(ax, points, bounding_box, 
+                point_size=3, point_color='#115f9a', opacity=1.0,
+                coordinate_system='EPSG:3857',
+                \*\*extra_contextily_params)**
 
 &#x2002; &#x2003; 直接在matplotlib中绘制点图。
 
@@ -28,6 +30,7 @@ point_size=3, point_color='red', point_opacity=1.0, \*\*extra_contextily_params)
       >>> import pandas as pd
       >>> import numpy as np
       >>> import arctern
+      >>> from arctern import plot_pointmap
       >>> import matplotlib as plt
       >>> from arctern.util import save_png
       >>> from arctern.util.vega import vega_pointmap
@@ -47,8 +50,5 @@ point_size=3, point_color='red', point_opacity=1.0, \*\*extra_contextily_params)
       >>> # 绘制点大小为10，点颜色为#115f9a，点不透明度为0.5的点图
       >>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
       >>> plot_pointmap(ax, points, [-74.01398981737215,40.71353244267465,-73.96979949831308,40.74480271529791], point_size=10, point_color='red')
-      >>> plt.savefig("/tmp/python_plot_pointmap.png")
+      >>> plt.show()
    ```
-
-渲染结果如下：
-![](../../../../../../../img/render/python/python_pointmap.png)
