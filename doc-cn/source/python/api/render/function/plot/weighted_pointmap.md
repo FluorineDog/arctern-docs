@@ -1,19 +1,26 @@
-# weighted_point_map_layer
+# plot_weighted_pointmap
+**plot_weighted_pointmap(ax, points, 
+                         color_weights=None,
+                         size_weights=None,
+                         bounding_box=None,
+                         color_gradient=["#115f9a", "#d0f400"],
+                         color_bound=[0, 0],
+                         size_bound=[3],
+                         opacity=1.0,
+                         coordinate_system='EPSG:3857',
+                         \*\*extra_contextily_params) **
 
-绘制一个带权点图。需要先后调用 vega_weighted_pointmap 和 weighted_point_map_layer 两个接口。首先使用 vega_weighted_pointmap 构建描述带权点图渲染样式的 VegaWeightedPointMap 对象，然后使用 weighted_point_map_layer 渲染图像。
-
-## vega_weighted_pointmap 
-
-**arctern.util.vega.vega_weighted_pointmap(width,height,bounding_box,color_gradient,
-color_bound,size_bound,opacity,coordinate_system)**
-
-&#x2002; &#x2003; 根据给定的配置参数，构建描述带权点图渲染样式的 VegaWeightedPointMap 对象。
+&#x2002; &#x2003; 直接在matplotlib中绘制点图。
 
 &#x2002; &#x2003; 参数
 
-&#x2002; &#x2003; &#x2002; &#x2003; * width(int) -- 图片宽度，单位为像素个数。
+&#x2002; &#x2003; &#x2002; &#x2003; * ax(matplotlib.axes.Axes) -- 用来绘制几何体的坐标轴。
 
-&#x2002; &#x2003; &#x2002; &#x2003; * height(int) -- 图片高度，单位为像素个数。
+&#x2002; &#x2003; &#x2002; &#x2003; * points(Series(dtype: object)) -- 所需绘制的点，格式为 WKB。
+
+&#x2002; &#x2003; &#x2002; &#x2003; * color_weights(Series(dtype: float64|int64)) -- 可选参数，点的颜色权重。
+
+&#x2002; &#x2003; &#x2002; &#x2003; * size_weights(Series(dtype: float64|int64)) -- 可选参数，点的大小权重。
 
 &#x2002; &#x2003; &#x2002; &#x2003; * bounding_box(list) -- 图片对应的地理坐标区域，以 [x_min, y_min, x_max, y_max] 的形式表示一个矩形区域。图片左下角的像素坐标 (0, 0) 对应地理坐标 (x_min, y_min) ，图片右上角的像素坐标 (width, height) 对应地理坐标 (x_max, y_max)。
 
@@ -27,43 +34,8 @@ color_bound,size_bound,opacity,coordinate_system)**
 
 &#x2002; &#x2003; &#x2002; &#x2003; * coordinate_system(str) -- 可选参数，表示输入数据所属的地理坐标系统，默认值为"EPSG:3857"，当前支持的地理坐标系统请参照 <https://spatialreference.org/>。
 
+&#x2002; &#x2003; &#x2002; &#x2003; * extra_contextily_params(dict) -- 剩余参数, 传递给 contextily.add_basemap, 可用于[更换地图背景, 或修改地图提供商](https://contextily.readthedocs.io/en/latest/providers_deepdive.html).
 
-&#x2002; &#x2003; 返回值类型
-   
-&#x2002; &#x2003; &#x2002; &#x2003; arctern.util.vega.pointmap.vega_weighted_pointmap.VegaWeightedPointMap
-
-
-&#x2002; &#x2003; 返回
-
-&#x2002; &#x2003; &#x2002; &#x2003; 用于描述渲染样式的 VegaWeightedPointMap 对象。
-
-
-
-## weighted_point_map_layer 
-
-**arctern.weighted_point_map_layer(vega, points, color_weights, size_weights)**
-
-&#x2002; &#x2003; 绘制带权重的点图，权重用于决定点的大小和颜色。
-
-&#x2002; &#x2003; 参数
-
-&#x2002; &#x2003; &#x2002; &#x2003; * vega(VegaWeightedPointMap) -- VegaWeightedPointMap 对象。
-
-&#x2002; &#x2003; &#x2002; &#x2003; * points(Series(dtype: object)) -- 所需绘制的点，格式为 WKB。
-
-&#x2002; &#x2003; &#x2002; &#x2003; * color_weights(Series(dtype: float64|int64)) -- 可选参数，点的颜色权重。
-
-&#x2002; &#x2003; &#x2002; &#x2003; * size_weights(Series(dtype: float64|int64)) -- 可选参数，点的大小权重。
-
-
-&#x2002; &#x2003; 返回值类型
-   
-&#x2002; &#x2003; &#x2002; &#x2003; bytes
-
-
-&#x2002; &#x2003; 返回
-
-&#x2002; &#x2003; &#x2002; &#x2003; base64 编码的 PNG 图片。
 
 
 ### 示例:
@@ -72,6 +44,8 @@ color_bound,size_bound,opacity,coordinate_system)**
       >>> import pandas as pd
       >>> import numpy as np
       >>> import arctern
+      >>> from arctern import plot_weighted_pointmap
+      >>> import matplotlib as plt
       >>> from arctern.util import save_png
       >>> from arctern.util.vega import vega_weighted_pointmap
       >>> 
@@ -90,24 +64,17 @@ color_bound,size_bound,opacity,coordinate_system)**
       >>> points2 = arctern.ST_Point(input2['longitude'], input2['latitude'])
       >>> 
       >>> # 绘制带权点图，点的大小为 16，点的颜色根据 input1['color_weights'] 在 "#115f9a" ~ "#d0f400" 之间变化
-      >>> vega1 = vega_weighted_pointmap(1740, 1767, bounding_box=[-73.99668712186558,40.72972339069935,-73.99045479584949,40.7345193345495], color_gradient=["#115f9a", "#d0f400"], color_bound=[2.5,15], size_bound=[16], opacity=1.0, coordinate_system="EPSG:4326")
-      >>> png1 = arctern.weighted_point_map_layer(vega1, points1, color_weights=input1['color_weights'])
-      >>> save_png(png1, "/tmp/python_weighted_pointmap_1_0.png")  
+      >>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
+      >>> plot_weighted_pointmap(ax, points1, color_weights=input1['color_weights'], bounding_box=[-73.99668712186558,40.72972339069935,-73.99045479584949,40.7345193345495], color_gradient=["#115f9a", "#d0f400"], color_bound=[2.5,15], size_bound=[16], opacity=1.0, coordinate_system="EPSG:4326")
+      >>> plt.show()
       >>> 
       >>> # 绘制带权点图，点的颜色为'#37A2DA'，点的大小根据 input2['size_weights'] 在 15 ~ 50 之间变化
-      >>> vega2 = vega_weighted_pointmap(1740, 1767, bounding_box=[-73.99668712186558,40.72972339069935,-73.99045479584949,40.7345193345495], color_gradient=["#37A2DA"], size_bound=[15, 50], opacity=1.0, coordinate_system="EPSG:4326")
-      >>> png2 = arctern.weighted_point_map_layer(vega2, points2, size_weights=input2['size_weights'])
-      >>> save_png(png2, '/tmp/python_weighted_pointmap_0_1.png')  
+      >>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
+      >>> plot_weighted_pointmap(ax, points2, size_weights=input2['size_weights'], bounding_box=[-73.99668712186558,40.72972339069935,-73.99045479584949,40.7345193345495], color_gradient=["#37A2DA"], size_bound=[15, 50], opacity=1.0, coordinate_system="EPSG:4326")
+      >>> plt.show()
       >>> 
       >>> # 绘制带权点图，点的颜色根据 input2['color_weights'] 在 "#115f9a" ~ "#d0f400" 之间变化，点的大小根据 input2['size_weights'] 在 15 ~ 50 之间变化
-      >>> vega3 = vega_weighted_pointmap(1740, 1767, bounding_box=[-73.99668712186558,40.72972339069935,-73.99045479584949,40.7345193345495], color_gradient=["#115f9a", "#d0f400"], color_bound=[2.5,15], size_bound=[15, 50], opacity=1.0, coordinate_system="EPSG:4326")
-      >>> png3 = arctern.weighted_point_map_layer(vega3, points2, color_weights=input2['color_weights'], size_weights=input2['size_weights'])
-      >>> save_png(png3, '/tmp/python_weighted_pointmap_1_1.png')
+      >>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
+      >>> plot_weighted_pointmap(ax, points2, color_weights=input2['color_weights'], size_weights=input2['size_weights'], bounding_box=[-73.99668712186558,40.72972339069935,-73.99045479584949,40.7345193345495], color_gradient=["#115f9a", "#d0f400"], color_bound=[2.5,15], size_bound=[15, 50], opacity=1.0, coordinate_system="EPSG:4326")
+      >>> plt.show()
    ```
-
-渲染结果如下：
-![](../../../../../../../img/render/python/python_weighted_pointmap_1_0.png)
-
-![](../../../../../../../img/render/python/python_weighted_pointmap_0_1.png)
-
-![](../../../../../../../img/render/python/python_weighted_pointmap_1_1.png)
