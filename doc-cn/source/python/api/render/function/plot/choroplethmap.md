@@ -1,19 +1,19 @@
-# choropleth_map_layer
+# plot_choropleth_map
 
-绘制一个轮廓图。需要先后调用 vega_choroplethmap 和 choropleth_map_layer 两个接口。首先使用 vega_choroplethmap 构建描述轮廓图渲染样式的 VegaChoroplethMap 对象，然后使用 choropleth_map_layer 渲染图像。
+**plot_choropleth_map(ax, region_boundaries, weights, bounding_box,
+                      color_gradient, color_bound=None, opacity=1.0,
+                      coordinate_system='EPSG:3857',
+                      \*\*extra_contextily_params)**
 
-## vega_choroplethmap
-
-**arctern.util.vega.vega_choroplethmap(width,height,bounding_box,color_gradient,
-color_bound,opacity,coordinate_system,aggregation_type)**
-
-&#x2002; &#x2003; 根据给定的配置参数，构建描述轮廓图渲染样式的 VegaChoroplethMap 对象。
+&#x2002; &#x2003; 直接在matplotlib中绘制点图。
 
 &#x2002; &#x2003; 参数
 
-&#x2002; &#x2003; &#x2002; &#x2003; * width(int) -- 图片宽度，单位为像素个数。
+&#x2002; &#x2003; &#x2002; &#x2003; * ax(matplotlib.axes.Axes) -- 用来绘制几何体的坐标轴。
 
-&#x2002; &#x2003; &#x2002; &#x2003; * height(int) -- 图片高度，单位为像素个数。
+&#x2002; &#x2003; &#x2002; &#x2003; * region_boundaries(Series(dtype: object)) -- 所需绘制的多边形轮廓，格式为WKB。
+
+&#x2002; &#x2003; &#x2002; &#x2003; * weights(Series(dtype: float64|int64)) -- 轮廓的颜色权重。
 
 &#x2002; &#x2003; &#x2002; &#x2003; * bounding_box(list) -- 图片对应的地理坐标区域，以 [x_min, y_min, x_max, y_max] 的形式表示一个矩形区域。图片左下角的像素坐标 (0, 0) 对应地理坐标 (x_min, y_min) ，图片右上角的像素坐标 (width, height) 对应地理坐标 (x_max, y_max)。
 
@@ -27,41 +27,9 @@ color_bound,opacity,coordinate_system,aggregation_type)**
 
 &#x2002; &#x2003; &#x2002; &#x2003; * aggregation_type(str) -- 可选参数，表示输入数据到轮廓权重的聚合方式，默认值为"sum"。
 
-
-&#x2002; &#x2003; 返回值类型
-   
-&#x2002; &#x2003; &#x2002; &#x2003; arctern.util.vega.choroplethmap.vega_choroplethmap.VegaChoroplethMap
+&#x2002; &#x2003; &#x2002; &#x2003; * extra_contextily_params(dict) -- 剩余参数, 传递给 contextily.add_basemap, 可用于[更换地图背景, 或修改地图提供商](https://contextily.readthedocs.io/en/latest/providers_deepdive.html).
 
 
-&#x2002; &#x2003; 返回
-
-&#x2002; &#x2003; &#x2002; &#x2003; 用于描述渲染样式的 VegaChoroplethMap 对象。
-
-
-
-## choropleth_map_layer 
-
-**arctern.choropleth_map_layer(vega, region_boundaries, weights)**
-
-&#x2002; &#x2003; 绘制轮廓图，权重用于决定轮廓的填充颜色。
-
-&#x2002; &#x2003; 参数
-
-&#x2002; &#x2003; &#x2002; &#x2003; * vega(VegaChoroplethMap) -- VegaChoroplethMap 对象。
-
-&#x2002; &#x2003; &#x2002; &#x2003; * region_boundaries(Series(dtype: object)) -- 所需绘制的多边形轮廓，格式为 WKB。
-
-&#x2002; &#x2003; &#x2002; &#x2003; * weights(Series(dtype: float64|int64)) -- 轮廓的颜色权重。
-
-
-&#x2002; &#x2003; 返回值类型
-   
-&#x2002; &#x2003; &#x2002; &#x2003; bytes
-
-
-&#x2002; &#x2003; 返回
-
-&#x2002; &#x2003; &#x2002; &#x2003; base64 编码的 PNG 图片。
 
 
 ### 示例:
@@ -80,9 +48,9 @@ color_bound,opacity,coordinate_system,aggregation_type)**
       >>> polygon = arctern.ST_GeomFromText(input1['region_boundaries'])
       >>> 
       >>> # 绘制轮廓图，轮廓的填充颜色根据 input1['color_weights'] 在 "#115f9a" ~ "#d0f400" 之间变化
-      >>> vega = vega_choroplethmap(1922, 1663, bounding_box=[-74.01124953254566,40.73413446570038,-73.96238859103838,40.766161712662296], color_gradient=["#115f9a","#d0f400"], color_bound=[5,18], opacity=1.0, coordinate_system='EPSG:4326', aggregation_type="mean")
-      >>> png = arctern.choropleth_map_layer(vega, polygon, input1['color_weights'])
-      >>> save_png(png, "/tmp/python_choroplethmap.png")
+      >>> fig, ax = plt.subplots(figsize=(10, 6), dpi=200)
+      >>> plot_choropleth_map(ax, polygon, input1['color_weights'], bounding_box=[-74.01124953254566,40.73413446570038,-73.96238859103838,40.766161712662296], color_gradient=["#115f9a","#d0f400"], color_bound=[5,18], opacity=1.0, coordinate_system='EPSG:4326', aggregation_type="mean")
+      >>> plt.show()
    ```
 
 渲染结果如下：
